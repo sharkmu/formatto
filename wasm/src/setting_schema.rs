@@ -48,3 +48,52 @@ pub struct MainPluginSettings {
     pub format_options: FormatOptions,
     pub other_options: OtherOptions,
 }
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DefaultHeadingGaps {
+    /// Decides gaps before top level of headings.
+    pub before_top_level_headings: Option<String>,
+    /// Decides the child heading gap right before a parent heading.
+    pub before_first_sub_heading: Option<String>,
+    /// Decides gaps before headings that are not in the top level.
+    pub before_sub_headings: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DefaultOtherGaps {
+    /// Decides the gap after the property section.
+    pub after_properties: Option<String>,
+    /// Decides gaps before contents (ex: Text section before headings).
+    pub before_contents: Option<String>,
+    /// Decides gaps before 'contents that are after code blocks'.
+    pub before_contents_after_code_blocks: Option<String>,
+    /// Decides gaps before code blocks.
+    pub before_code_blocks: Option<String>,
+    /// Decides gaps before 'code blocks that are after headings'.
+    pub before_code_blocks_after_headings: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DefaultFormatOptions {
+    /// Inserts a newline at the end of a document.
+    pub insert_newline: Option<bool>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DefaultOtherOptions {
+    /// Displays a different message when no change was made.
+    pub notify_when_unchanged: Option<bool>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DefaultPluginSettings {
+    pub heading_gaps: DefaultHeadingGaps,
+    pub other_gaps: DefaultOtherGaps,
+    pub format_options: DefaultFormatOptions,
+    pub other_options: DefaultOtherOptions,
+}

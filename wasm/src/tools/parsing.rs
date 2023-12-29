@@ -208,27 +208,26 @@ pub fn get_top_heading_level(input_lines: &[&str]) -> usize {
 
 /// Parse a usize value from a &str type argument.
 /// Also return an `Error` to handle exceptions.
-pub fn parse_str_to_usize(input: &Option<String>) -> Result<usize, Box<dyn Error>> {
-    if let Some(input) = input {
-        if input.is_empty() {
-            return Err(String::from(
-                "Failed to read settings. Please make sure there is no option with an empty value.",
-            )
-            .into());
-        }
-    }
-
-    match input {
-        Some(input) => match input.parse::<usize>() {
-            Ok(num) => Ok(num),
-            Err(err) => {
-                console_error!("{}", err);
-                Err(String::from(
-                    "Failed to read settings. Some of them are possibly not positive number values.",
-                )
-                .into())
+pub fn parse_str_to_usize(input: &Option<String>, default: &Option<String>) -> Result<usize, Box<dyn Error>> {
+    let input: String = match input {
+        Some(input) => {
+            if input.is_empty() {
+                return;
+            } else {
+                return;
             }
         },
-        None => Err(String::from("Failed to access setting properties.").into()),
+        None => return Err(String::from("Failed to access setting properties.").into()),
+    };
+
+    match input.parse::<usize>() {
+        Ok(num) => Ok(num),
+        Err(err) => {
+            console_error!("{}", err);
+            Err(String::from(
+                "Failed to read settings. Some of them are possibly not positive number values.",
+            )
+            .into())
+        }
     }
 }

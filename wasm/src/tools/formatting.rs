@@ -1,6 +1,6 @@
 use std::error::Error;
 
-use crate::setting_schema::MainPluginSettings;
+use crate::setting_schema::{MainPluginSettings, DefaultPluginSettings};
 use crate::tools::{
     parsing::parse_str_to_usize,
     tokens::{HeadingLevel, MarkdownSection},
@@ -9,7 +9,8 @@ use crate::tools::{
 /// Return a String value that is replacing the entire document.
 pub fn get_formatted_string(
     sections: Vec<MarkdownSection>,
-    settings: &MainPluginSettings,
+    main_settings: &MainPluginSettings,
+    default_settings: &DefaultPluginSettings,
 ) -> Result<String, Box<dyn Error>> {
     let mut output = String::new();
 
@@ -34,10 +35,10 @@ pub fn get_formatted_string(
                             if output.is_empty() {
                                 0
                             } else if right_after_properties {
-                                parse_str_to_usize(&settings.other_gaps.after_properties)? + 1
+                                parse_str_to_usize(&main_settings.other_gaps.after_properties, &default_settings.other_gaps.after_properties,)? + 1
                             } else {
                                 parse_str_to_usize(
-                                    &settings.heading_gaps.before_top_level_headings,
+                                    &main_settings.heading_gaps.before_top_level_headings, &default_settings.heading_gaps.before_top_level_headings
                                 )? + 1
                             },
                             0,
@@ -49,9 +50,9 @@ pub fn get_formatted_string(
                             if output.is_empty() {
                                 0
                             } else if right_after_properties {
-                                parse_str_to_usize(&settings.other_gaps.after_properties)? + 1
+                                parse_str_to_usize(&main_settings.other_gaps.after_properties, &default_settings.other_gaps.after_properties)? + 1
                             } else {
-                                parse_str_to_usize(&settings.heading_gaps.before_first_sub_heading)?
+                                parse_str_to_usize(&main_settings.heading_gaps.before_first_sub_heading, &default_settings.heading_gaps.before_first_sub_heading)?
                                     + 1
                             },
                             0,
@@ -64,9 +65,9 @@ pub fn get_formatted_string(
                             if output.is_empty() {
                                 0
                             } else if right_after_properties {
-                                parse_str_to_usize(&settings.other_gaps.after_properties)? + 1
+                                parse_str_to_usize(&main_settings.other_gaps.after_properties, &default_settings.other_gaps.after_properties)? + 1
                             } else {
-                                parse_str_to_usize(&settings.heading_gaps.before_sub_headings)? + 1
+                                parse_str_to_usize(&main_settings.heading_gaps.before_sub_headings, &default_settings.heading_gaps.before_sub_headings)? + 1
                             },
                             0,
                         ));
@@ -83,12 +84,12 @@ pub fn get_formatted_string(
                     if output.is_empty() {
                         0
                     } else if right_after_properties {
-                        parse_str_to_usize(&settings.other_gaps.after_properties)? + 1
+                        parse_str_to_usize(&main_settings.other_gaps.after_properties, &default_settings.other_gaps.after_properties)? + 1
                     } else if right_after_code_block {
-                        parse_str_to_usize(&settings.other_gaps.before_contents_after_code_blocks)?
+                        parse_str_to_usize(&main_settings.other_gaps.before_contents_after_code_blocks, &default_settings.other_gaps.before_contents_after_code_blocks)?
                             + 1
                     } else {
-                        parse_str_to_usize(&settings.other_gaps.before_contents)? + 1
+                        parse_str_to_usize(&main_settings.other_gaps.before_contents, &default_settings.other_gaps.before_contents)? + 1
                     },
                     0,
                 ));
@@ -103,12 +104,12 @@ pub fn get_formatted_string(
                     if output.is_empty() {
                         0
                     } else if right_after_properties {
-                        parse_str_to_usize(&settings.other_gaps.after_properties)? + 1
+                        parse_str_to_usize(&main_settings.other_gaps.after_properties, &default_settings.other_gaps.after_properties)? + 1
                     } else if right_after_heading {
-                        parse_str_to_usize(&settings.other_gaps.before_code_blocks_after_headings)?
+                        parse_str_to_usize(&main_settings.other_gaps.before_code_blocks_after_headings, &default_settings.other_gaps.before_code_blocks_after_headings)?
                             + 1
                     } else {
-                        parse_str_to_usize(&settings.other_gaps.before_code_blocks)? + 1
+                        parse_str_to_usize(&main_settings.other_gaps.before_code_blocks, &default_settings.other_gaps.before_code_blocks)? + 1
                     },
                     0,
                 ));
@@ -120,7 +121,7 @@ pub fn get_formatted_string(
         }
     }
 
-    if settings.format_options.insert_newline == Some(true) {
+    if main_settings.format_options.insert_newline == Some(true) {
         output.push('\n');
     }
 
